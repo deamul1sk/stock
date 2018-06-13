@@ -1,0 +1,264 @@
+﻿@using PagedList
+@using PagedList.Mvc
+
+@model List<Warehouse.Models.Detail_Product>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Home.cshtml";
+}
+<div class="breadcrumbs">
+    <div class="col-sm-4">
+        <div class="page-header float-left">
+            <div class="page-title">
+                <h1>Detail Bill</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="page-header float-right">
+            <div class="page-title">
+                <ol class="breadcrumb text-right">
+                    <li class="">Home</li>
+                    <li class="active">Detail Bill</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content mt-3">
+    <div class="animated fadeIn">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="col-sm-9"><strong class="card-title">Data Table</strong></div>
+                        <div class="col-sm-3 text-right">
+                            <button class="btn btn-success" data-toggle="modal" data-target="#Insert" onclick="Add_Initial()">Add</button>
+                        </div>
+
+
+                    </div>
+                    <div class="card-body">
+                        <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Bill</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Chuc nang</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td id="Display_Product_@Html.DisplayFor(modelItem => item.id)">
+                                        @Html.DisplayFor(modelItem => item.Product.name)
+                                    </td>
+                                    <td id="Display_Bill_@Html.DisplayFor(modelItem => item.id)">
+                                        @Html.DisplayFor(modelItem => item.Bill.address)
+                                    </td>
+
+                                    <td id="Display_Quantity_@Html.DisplayFor(modelItem => item.id)">
+                                        @Html.DisplayFor(modelItem => item.quantity)
+                                    </td>
+                                    <td id="Display_Price_@Html.DisplayFor(modelItem => item.id)">
+                                        @Html.DisplayFor(modelItem => item.price)
+                                    </td>
+                                    <td>
+                                        <input type="button" value="Edit" data-toggle="modal" data-target="#Insert"
+                                               onclick="Edit_GetId(@Html.DisplayFor(modelItem => item.id))" class="btn btn-primary">
+                                        <a href="/Detail_Bill/Delete?idDet_Bil=@Html.DisplayFor(modelItem => item.id)" name="delete" class="btn btn-danger">Delete</a>
+
+
+                                    </td>
+                                    <td style="display: none" id="Display_idProduct_@Html.DisplayFor(modelItem => item.id)">
+                                        @Html.DisplayFor(modelItem => item.Product.id)
+                                    </td>
+                                    <td style="display: none" id="Display_idBill_@Html.DisplayFor(modelItem => item.id)">
+                                        @Html.DisplayFor(modelItem => item.Bill.id)
+                                    </td>
+                                </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div><!-- .animated -->
+</div><!-- .content -->
+
+<div id="dialog">
+    <div class="modal fade bs-example-modal-lg" id="Insert" tabindex="-1"
+         role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-sm-8" style="padding-left: 0px;">
+                        <h4 class="modal-title" id="myModalLabel"
+                            style="font-size: 18px; margin: 0px">
+                            Modal title
+                        </h4>
+                    </div>
+                    <div class="col-sm-2" style="padding-right: 0px;">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+
+                </div>
+                <form action="/Detail_Bill/Add"
+                      method="post" class="form-horizontal"
+                      enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="card">
+
+
+                            <div class="card-body card-block">
+
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="Basic_Name" class="form-control-label">Product</label>
+                                        <span style="color: red; font-size: 17px; padding-bottom: 10px;">*</span>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <select name="product" id="Insert_Product" class="form-control">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div style="top: -13px; color: gray; left: 10px; position: absolute; padding-left: 0px; font-size: 14px">
+                                        Basic
+                                    </div>
+                                    <div class="col col-md-3">
+                                        <label for="Basic_Email" class=" form-control-label">Bill</label>
+                                        <span style="color: red; font-size: 17px; padding-bottom: 10px;">*</span>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <select name="bill" id="Insert_Bill" class="form-control">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="Basic_Email" class=" form-control-label">Price</label>
+                                        <span style="color: red; font-size: 17px; padding-bottom: 10px;">*</span>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <input type="text" id="Insert_Price" name="price"
+                                               placeholder="Enter" value=""
+                                               class="form-control"><small class="form-text text-muted">
+                                            Please enter the format
+                                            correctly: abc@example.com
+                                        </small> <small class="help-block form-text" style="color: red;"
+                                                        id="Basic_s-Email"></small>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="Basic_Email" class=" form-control-label">Quantity</label>
+                                        <span style="color: red; font-size: 17px; padding-bottom: 10px;">*</span>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <input type="text" id="Insert_Quantity" name="quantity"
+                                               placeholder="Enter" value=""
+                                               class="form-control"><small class="form-text text-muted">
+                                            Please enter the format
+                                            correctly: abc@example.com
+                                        </small> <small class="help-block form-text" style="color: red;"
+                                                        id="Basic_s-Email"></small>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="idDet_Bil" id="frmInsert_Id" value="">
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                            changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
+<script>
+        // Handler for .ready() called.
+    
+       jQuery.ajax({
+            type: 'POST',
+            async: false,
+            url: '/Detail_Bill/Initial_Product',
+           success: function (data) {
+               
+               var cart = JSON.parse(data);
+               
+                var result = '';
+                jQuery.each(jQuery(cart), function (i, item) {
+                    result += '<option id="Insert_Product_' + item.id + '" value="' + item.id + '">' + item.name + '</option>';
+               });
+                jQuery('#Insert_Product').html(result);
+            }
+        });
+
+        jQuery.ajax({
+            type: 'POST',
+            async: false,
+            url: '/Detail_Bill/Initial_Bill',
+            success: function (data) {
+
+                var cart = JSON.parse(data);
+ 
+                var result = '';
+                jQuery.each(jQuery(cart), function (i, item) {
+                    result += '<option id="Insert_Bill_' + item.id +'" value="' + item.id + '">' + item.address + '</option>';
+                });
+
+                jQuery('#Insert_Bill').html(result);
+            }
+        });
+
+
+    function Edit_GetId(id) {
+        jQuery('#frmInsert_Id').val(id); // input hidden for idEmployee
+
+
+        jQuery('#Insert_Quantity').val(jQuery('#Display_Quantity_' + id).html().trim());
+        jQuery('#Insert_Price').val(jQuery('#Display_Price_' + id).html().trim());
+
+        jQuery('#Insert_Bill').val(jQuery('#Display_idBill_' + id).html().trim());
+        jQuery('#Insert_Product').val(jQuery('#Display_idProduct_' + id).html().trim());
+
+    }
+    function Add_Initial() {
+        jQuery('#frmInsert_Id').val(''); // input hidden for idEmployee
+
+        jQuery('#Insert_Quantity').val('');
+        jQuery('#Insert_Price').val('');
+    }
+    
+</script>
